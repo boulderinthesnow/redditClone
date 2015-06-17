@@ -3,5 +3,5 @@ mongoose.connect("mongodb://localhost/reddit_app");
 mongoose.set("debug", true);
 
 module.exports.User = require("./user");
-module.exports.Post = require("./posts");
-module.exports.Comment = require("./comments");
+module.exports.Post = require("./post");
+module.exports.Comment = require("./comment");
