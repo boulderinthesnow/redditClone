@@ -28,9 +28,30 @@ app.get('/', routeMiddleware.ensureLoggedIn, function(req,res){
   res.redirect('/posts');
 });
 
+app.get('/signup', function (req,res){
+  res.render('users/signup');
+});
+
+app.post("/signup", function (req, res) {
+  var newUser = req.body.user;
+  db.User.create(newUser, function (err, user) {
+    if (user) {
+      req.login(user);
+      res.redirect("/posts");
+    } else {
+      console.log(err);
+      // TODO - handle errors in ejs!
+      res.render("/signup");
+    }
+  });
+});
+
+
 app.get("/login", function (req, res) {
   res.render("users/login");
 });
+
+
 
 app.post("/login", function (req, res) {
   db.User.authenticate(req.body.user,
