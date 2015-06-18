@@ -13,7 +13,7 @@
 <h1><%=post.title%></h1>
 <p><%=post.body%></p>
 <a href="/posts/<%=post.id%>/edit">edit post</a>
-
+<a href="/posts/<%=post.id%>/comments/new">add a comment</a> 
 
 <form action="/posts/<%=post.id%>?_method=delete" method="POST">
 	<input type="submit" value="X" class="btn btn-danger btn-sm">

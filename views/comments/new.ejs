@@ -1,0 +1,14 @@
+<% include ../partials/header %>
+
+<h1>New Post</h1>
+ <form action="/posts" class="form-inline" method="POST">
+   <div class="form-group">
+   <textarea name="postId[text]" id="text" cols="30" rows="10" class="form-control" autofocus placeholder="enter new comment"></textarea>
+   </div>
+
+   <input type="submit" value="Comment" class="btn btn-success">
+ </form>
+ <a href="/posts/index">Go home</a> 
+
+<% include ../partials/footer %>
+

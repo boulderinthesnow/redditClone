@@ -131,7 +131,7 @@ app.get("/posts/new", function(req, res) {
 app.post("/posts", function(req, res) {
     db.Post.create(req.body.post, function (err, post) {
       if (err) {
-        res.render("errors/page");
+        res.render("errors/404");
       } else {
         res.redirect("/posts");
       }
@@ -177,8 +177,89 @@ app.delete("/posts/:id", function (req, res) {
     }
   })
 })
+//************************ COMMENT ************************//
+
+
+app.get("/posts/:id/comments/new", function (req, res) {
+  var postId = req.params.id
+  res.render("comments/new", {postId:postId})
+})
+
+app.post("/posts/:id/comments", function (req, res) {
+	  console.log('YOU MADE IT')
+	  var id = req.params.id
+    db.Comment.create(id, req.body.comment, function (err, post) {
+      if (err) {
+        res.render("errors/404");
+      } else {
+        res.redirect("/posts");
+      }
+  });
+})
+
+app.post('/posts/:id/comments', function(req,res){
+db.Comment.create(req.body.comment, function(err, comment){
+  if(err) {
+    console.log(err);
+    res.render("/posts");
+  }
+  else {
+    db.Post.findById(req.params.id,function(err,post){
+      post.comments.push(comment);
+      comment.post = req.params.id;
+      comment.save();
+      post.save();
+      res.redirect("/posts/"+ req.params.id +"/comments");
+    });
+  }
+});
+}); 
+
+// app.get("/main/:id", function(req,res){
+//     db.Model.findById(req.params.id, function(err, data){
+//     if(err){
+//       res.render("errors/404");
+//     } else {
+//       res.render('show', {data:data});
+//     }
+//   })
+// });
+
+// app.get("/comments/:id/edit", function(req,res){
+//   db.Post.findById(req.params.id, function(err, post){
+//     if(err){
+//       res.render("errors/404");
+//     } else {
+//       res.render('comments/edit', {post:post});
+//     }
+//   })
+// });
+
+// app.put("/comments/:id", function(req, res) {
+//   db.Post.findByIdAndUpdate(req.params.id, req.body.post,  function(err, post){
+//     if(err){
+//       res.render("404");
+//     } else{
+//       res.redirect('/comments');
+//     }
+//  })
+// });
+
+// app.delete("/comments/:id", function (req, res) {
+//   db.Post.findByIdAndRemove(req.params.id, function (err, post){
+//     if(err){
+//       res.render("404");
+//     } else{
+//       res.redirect('/comments');
+//     }
+//   })
+// })
+
 
 //*******************************************//
+
+
+
 
 
 app.get('*', function (req,res){
