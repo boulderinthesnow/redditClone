@@ -9,6 +9,7 @@ var routeHelpers = {
      res.redirect('/login');
     }
   }
+   
 
 //   ensureCorrectUser: function(req, res, next) {
 //     db.User.findById(req.params.id, function(err,user){

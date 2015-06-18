@@ -1,0 +1,16 @@
+<% include ../partials/header %>
+
+<h1>EDIT Yo POST</h1>
+ <form action="/posts/<%=post.id%>?_method=PUT" class="form-inline" method="POST">
+   <div class="form-group">
+     <input type="text" name="post[title]" id="title" class="form-control" autofocus value="<%=post.title%>">
+   </div>
+   <p></p>
+   <div class="form-group">
+   <textarea name="post[body]" id="body" cols="30" rows="10"><%=post.body%></textarea>
+   </div>
+   <input type="submit" value="Update" class="btn btn-success">
+ </form>
+
+<% include ../partials/footer %>
+

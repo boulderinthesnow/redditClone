@@ -46,12 +46,9 @@ app.post("/signup", function (req, res) {
   });
 });
 
-
 app.get("/login", function (req, res) {
   res.render("users/login");
 });
-
-
 
 app.post("/login", function (req, res) {
   db.User.authenticate(req.body.user,
@@ -66,29 +63,6 @@ app.post("/login", function (req, res) {
   });
 });
 
-app.get("/users/new", function(req, res) {
-  res.render("users/new")
-  // PUT LINK FROM POSTS TO THIS PATH
-  // FORM TO CREATE USER
-})
-
-
-
-app.post("/users", function(req, res) {
-    db.User.create(req.body.user, function (err, user) {
-    console.log(err, "THIS IS AN ERROR")
-      if (err) {
-        res.render("users/new");
-      } else {
-        res.redirect("/posts/:user_id/posts");
-        // PATH /POSTS SHOULD RENDER ALL THE POSTS
-      }
-  });
- 
-})
-
-
-
 
 app.get("/users/:id", function(req,res){
     db.Model.findById(req.params.id, function(err, user){
@@ -101,27 +75,27 @@ app.get("/users/:id", function(req,res){
 });
 
 app.get("/users/:id/edit", function(req,res){
-  db.Model.findById(req.params.id, function(err, data){
+  db.User.findById(req.params.id, function(err, user){
     if(err){
       res.render("errors/404");
     } else {
-      res.render('edit', {data:data});
+      res.render('users/edit', {user:user});
     }
   })
 });
 
 app.put("/users/:id", function(req, res) {
-  db.Model.findByIdAndUpdate(req.params.id, req.body.change,  function(err, data){
+  db.User.findByIdAndUpdate(req.params.id, req.body.user,  function(err, user){
     if(err){
       res.render("404");
     } else{
-      res.redirect('/users');
+      res.redirect('/posts');
     }
  })
 });
 
 app.delete("/users/:id", function(req, res) {
-  db.Model.findByIdAndRemove(req.params.id, function(err, data){
+  db.Model.findByIdAndRemove(req.params.id, function(err, user){
     if(err){
       res.render("404");
     } else{
@@ -131,27 +105,88 @@ app.delete("/users/:id", function(req, res) {
 })
 
 app.get("/posts", routeMiddleware.ensureLoggedIn, function(req, res) {
-	db.Post.find({}, function (err, posts) {
-		if(err){
-		  res.render("404");
-		} else {
-		  res.render('posts/index', {posts:posts});
-		}
-	}
-)})
+  db.User.findById(req.session.id,function(err,user){
+      db.Post.find({}, function(err, posts){
+        if(err){
+          res.render("errors/404");
+        } else {
+          res.render('posts/index', {posts:posts, user:user});
+        }
+      })    
+  })
+}); 
 
 app.get("/logout", function (req, res) {
   req.logout();
   res.redirect("/login");
 });
 
+//************************ POSTS ************************//
 
-app.get('*', function(req,res){
+
+app.get("/posts/new", function(req, res) {
+  res.render("posts/new")
+})
+
+app.post("/posts", function(req, res) {
+    db.Post.create(req.body.post, function (err, post) {
+      if (err) {
+        res.render("errors/page");
+      } else {
+        res.redirect("/posts");
+      }
+  });
+})
+
+// app.get("/main/:id", function(req,res){
+//     db.Model.findById(req.params.id, function(err, data){
+//     if(err){
+//       res.render("errors/404");
+//     } else {
+//       res.render('show', {data:data});
+//     }
+//   })
+// });
+
+app.get("/posts/:id/edit", function(req,res){
+  db.Post.findById(req.params.id, function(err, post){
+    if(err){
+      res.render("errors/404");
+    } else {
+      res.render('posts/edit', {post:post});
+    }
+  })
+});
+
+app.put("/posts/:id", function(req, res) {
+  db.Post.findByIdAndUpdate(req.params.id, req.body.post,  function(err, post){
+    if(err){
+      res.render("404");
+    } else{
+      res.redirect('/posts');
+    }
+ })
+});
+
+app.delete("/posts/:id", function (req, res) {
+  db.Post.findByIdAndRemove(req.params.id, function (err, post){
+    if(err){
+      res.render("404");
+    } else{
+      res.redirect('/posts');
+    }
+  })
+})
+
+//*******************************************//
+
+
+app.get('*', function (req,res){
   res.render('errors/404');
 });
 
 
-app.listen(3000, function(){
+app.listen(3000, function (){
   console.log("Server is listening on port 3000");
 }); 
  

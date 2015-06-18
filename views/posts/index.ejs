@@ -7,6 +7,18 @@
 </form> -->
 
 <a href="/logout">Logout</a>
+<a href="/posts/new">Create a new post</a>
 
+<% posts.forEach(function (post){ %>
+<h1><%=post.title%></h1>
+<p><%=post.body%></p>
+<a href="/posts/<%=post.id%>/edit">edit post</a>
+
+
+<form action="/posts/<%=post.id%>?_method=delete" method="POST">
+	<input type="submit" value="X" class="btn btn-danger btn-sm">
+</form>
+
+<% }) %>
 
 <% include ../partials/footer %>
